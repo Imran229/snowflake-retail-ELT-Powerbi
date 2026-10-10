@@ -73,7 +73,7 @@ Two pages: **Overview** (KPIs, orders per day, orders per promotion by discount 
 Charts that compare bar lengths start their axis at zero, and the trend chart uses orders per day instead of raw monthly totals so that month length does not create fake swings.
  
 ![Overview page](dashboard/overview.png)
-![Products and Returns page](dashboard/products_returns.png)
+![Products and Returns page](dashboard/Product & Returns.png)
  
 ## What I practised in Snowflake
  
