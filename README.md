@@ -100,7 +100,5 @@ dashboard/
   retail_dashboard.pdf
   overview.png
   products_returns.png
-docs/
-  data_quality_notes.md
 README.md
 ```
