@@ -1,0 +1,53 @@
+USE ROLE ACCOUNTADMIN;
+USE WAREHOUSE learn_wh;
+USE SCHEMA retail_db.raw;
+
+CREATE OR REPLACE TABLE categories USING TEMPLATE (SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*)) FROM TABLE(INFER_SCHEMA(LOCATION => '@raw_stage/categories.csv', FILE_FORMAT => 'csv_ff')));
+COPY INTO categories FROM @raw_stage/categories.csv FILE_FORMAT = (FORMAT_NAME = 'csv_ff') MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
+
+CREATE OR REPLACE TABLE customers USING TEMPLATE (SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*)) FROM TABLE(INFER_SCHEMA(LOCATION => '@raw_stage/customers.csv', FILE_FORMAT => 'csv_ff')));
+COPY INTO customers FROM @raw_stage/customers.csv FILE_FORMAT = (FORMAT_NAME = 'csv_ff') MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
+
+CREATE OR REPLACE TABLE employees USING TEMPLATE (SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*)) FROM TABLE(INFER_SCHEMA(LOCATION => '@raw_stage/employees.csv', FILE_FORMAT => 'csv_ff')));
+COPY INTO employees FROM @raw_stage/employees.csv FILE_FORMAT = (FORMAT_NAME = 'csv_ff') MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
+
+CREATE OR REPLACE TABLE order_items USING TEMPLATE (SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*)) FROM TABLE(INFER_SCHEMA(LOCATION => '@raw_stage/order_items.csv', FILE_FORMAT => 'csv_ff')));
+COPY INTO order_items FROM @raw_stage/order_items.csv FILE_FORMAT = (FORMAT_NAME = 'csv_ff') MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
+
+CREATE OR REPLACE TABLE orders USING TEMPLATE (SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*)) FROM TABLE(INFER_SCHEMA(LOCATION => '@raw_stage/orders.csv', FILE_FORMAT => 'csv_ff')));
+COPY INTO orders FROM @raw_stage/orders.csv FILE_FORMAT = (FORMAT_NAME = 'csv_ff') MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
+
+CREATE OR REPLACE TABLE payments USING TEMPLATE (SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*)) FROM TABLE(INFER_SCHEMA(LOCATION => '@raw_stage/payments.csv', FILE_FORMAT => 'csv_ff')));
+COPY INTO payments FROM @raw_stage/payments.csv FILE_FORMAT = (FORMAT_NAME = 'csv_ff') MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
+
+CREATE OR REPLACE TABLE products USING TEMPLATE (SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*)) FROM TABLE(INFER_SCHEMA(LOCATION => '@raw_stage/products.csv', FILE_FORMAT => 'csv_ff')));
+COPY INTO products FROM @raw_stage/products.csv FILE_FORMAT = (FORMAT_NAME = 'csv_ff') MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
+
+CREATE OR REPLACE TABLE promotions USING TEMPLATE (SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*)) FROM TABLE(INFER_SCHEMA(LOCATION => '@raw_stage/promotions.csv', FILE_FORMAT => 'csv_ff')));
+COPY INTO promotions FROM @raw_stage/promotions.csv FILE_FORMAT = (FORMAT_NAME = 'csv_ff') MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
+
+CREATE OR REPLACE TABLE returns USING TEMPLATE (SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*)) FROM TABLE(INFER_SCHEMA(LOCATION => '@raw_stage/returns.csv', FILE_FORMAT => 'csv_ff')));
+COPY INTO returns FROM @raw_stage/returns.csv FILE_FORMAT = (FORMAT_NAME = 'csv_ff') MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
+
+CREATE OR REPLACE TABLE shipments USING TEMPLATE (SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*)) FROM TABLE(INFER_SCHEMA(LOCATION => '@raw_stage/shipments.csv', FILE_FORMAT => 'csv_ff')));
+COPY INTO shipments FROM @raw_stage/shipments.csv FILE_FORMAT = (FORMAT_NAME = 'csv_ff') MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
+
+CREATE OR REPLACE TABLE stores USING TEMPLATE (SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*)) FROM TABLE(INFER_SCHEMA(LOCATION => '@raw_stage/stores.csv', FILE_FORMAT => 'csv_ff')));
+COPY INTO stores FROM @raw_stage/stores.csv FILE_FORMAT = (FORMAT_NAME = 'csv_ff') MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
+
+CREATE OR REPLACE TABLE suppliers USING TEMPLATE (SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*)) FROM TABLE(INFER_SCHEMA(LOCATION => '@raw_stage/suppliers.csv', FILE_FORMAT => 'csv_ff')));
+COPY INTO suppliers FROM @raw_stage/suppliers.csv FILE_FORMAT = (FORMAT_NAME = 'csv_ff') MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE;
+
+SELECT table_name, row_count
+FROM retail_db.information_schema.tables
+WHERE table_schema = 'RAW'
+ORDER BY table_name;
+
+
+SELECT table_name,
+       LISTAGG(column_name || ' (' || data_type || ')', ', ')
+         WITHIN GROUP (ORDER BY ordinal_position) AS columns_list
+FROM retail_db.information_schema.columns
+WHERE table_schema = 'RAW'
+GROUP BY table_name
+ORDER BY table_name;
